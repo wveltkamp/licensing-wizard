@@ -10,7 +10,7 @@
             <b-form id="form-license" ref="form-license">
                 <b-row>
                     <b-col>
-                        <b-button variant="outline-primary" @click="resetForm">Restart Wizard</b-button>
+                        <b-button class="m-2" variant="outline-primary" @click="resetForm">Restart Wizard</b-button>
                     </b-col>
                 </b-row>
                 <b-row>
