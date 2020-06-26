@@ -4,45 +4,75 @@
         <b-row>
             <b-col>
                 <h4>Licensing Wizard</h4>
+                
             </b-col>
         </b-row>
         <b-row>
             <b-form id="form-license" ref="form-license">
+
+
+
                 <b-row>
                     <b-col>
                         <b-button class="m-2" variant="outline-primary" @click="resetForm">Restart Wizard</b-button>
                     </b-col>
                 </b-row>
-                <b-row>
-                    
-                    <template v-for="(question, index) in orderedQuestions" >
-                        <b-col 
-                            :key="index"
-                            cols="12"
-                            v-if="question.show"
-                        >
-                            <question-card 
-                                :question="question" 
-                                :options="optionsBool"
-                                @questionAnswered="handleQuestionAnswered"
-                            />
-                        </b-col>
-                    </template>
-                    
-                    <b-col cols="12" v-if="questions.canLicense.value==false">
+
+    
+                
+                <b-row>  
+                    <b-col cols="12" >
+                        <b-card no-body class="m-2">
+                            <b-tabs pills card vertical>
+                                <transition-group name="slide-right">
+                                
+                                    <question-card 
+                                        v-for="question in showQuestions" 
+                                        :key="'tab-'+question.step"
+                                    
+                                        :question="question" 
+                                        :options="optionsBool"
+                                        :current-step="currentStep"
+                                        :answer-text="getAnswerText(question)"
+                                        @questionAnswered="handleQuestionAnswered"
+                                    >
+                                        <info-button 
+                                            button-text="More info"
+                                            modal-title="title"
+                                            modal-text="text"
+                                        />
+                                    </question-card>
+
+                                </transition-group>
+                            </b-tabs>
+                        
+                        </b-card>
+                    </b-col>
+                </b-row>     
+                
+
+                <b-row v-if="questions.canLicense.value==false">
+                    <b-col cols="12" >
                         <b-card class="m-2">
                             <b-alert show variant="warning">No License possible</b-alert>
                         </b-card>
                     </b-col>
+                </b-row>
 
-                    <b-col cols="12" v-if="showSelect">
+                <b-row v-if="showSelect">
+                    <b-col cols="12">
                         <b-card class="m-2">
-                            <span>Please select your license</span>
+                            <span v-if="questions.knowLicense.value">Please select your license</span>
+                            <span v-if="questions.knowLicense.value === false">Based on your selection, we suggest:</span>
                             <b-form-select
                                 v-model="selectedLicense"
                                 :options="licenseOptions"
                                 size="sm"
                             />
+                        </b-card>
+                    </b-col>
+                    <b-col cols="12" >
+                        <b-card class="m-2">
                             <span>{{wurOnly.question}}</span>
                             <b-form-checkbox 
                                 v-model="wurOnly.value"
@@ -52,11 +82,10 @@
                             </b-form-checkbox>
                         </b-card>
                     </b-col>
-
                 </b-row>
+
             </b-form>
-        </b-row>
-        
+        </b-row> 
     </b-container>
 </template>
 
@@ -64,10 +93,11 @@
 import Vue from "vue"
 import _ from 'lodash';
 import QuestionCard from "../components/QuestionCard";
+import InfoButton from "../components/InfoButton";
 
 export default {
     name: "license-wizard",
-    components: { QuestionCard },
+    components: { QuestionCard, InfoButton },
     data() {
         return {
             currentStep: 1,
@@ -127,13 +157,15 @@ export default {
                 "CC0 1.0", 
                 "wur-c", 
                 {text: "CC-SA", value :"CC-SA", disabled: true}],
-            selectedLicense: ""
+            selectedLicense: "",
+
         };
     },
 
     computed: {
-        orderedQuestions() { return _.orderBy(this.questions, 'step')},
-
+        orderedQuestions()  { return _.orderBy(this.questions, 'step') },
+        currentQuestion()   { return this.orderedQuestions.filter(q => q.step === this.currentStep) },
+        showQuestions()     { return this.orderedQuestions.filter(q => q.step <= this.currentStep) }
     },
 
     methods: {
@@ -141,6 +173,17 @@ export default {
             this.$refs['form-license'].reset();
             for (const question in this.questions) {
                 Vue.set(this.questions[question], 'value', null)
+            }
+            this.currentStep = 1
+        },
+
+        hideSteps(step) {
+            //Hide any questions past the current question
+            for (const question in this.questions) {
+                if (this.questions[question].step > step) {
+                    Vue.set(this.questions[question], 'show', false)
+                    Vue.set(this.questions[question], 'value', null)
+                }
             }
         },
 
@@ -152,22 +195,27 @@ export default {
                 case 1:
                     // If a license is possible, continue to next question, else, show error message
                     if (this.questions.canLicense.value === true) {
-                        this.questions.knowLicense.show = true
+                        this.currentStep = step + 1
+                    }
+                    else if (this.questions.canLicense.value === false) {
+                        this.currentStep = step
                     }
                     break;
                 case 2:
                     // If the user knows which license they want, skip directly to question for wur-only sharing
                     if (this.questions.knowLicense.value === true) {
                         showSelect = true
+                        this.currentStep = step
                     } else if (this.questions.knowLicense.value === false) {
-                        this.questions.shareWork.show = true
+                        this.currentStep = step + 1
                     }
                     break;
                 case 3:
                     //If no sharing is possible, go to all rights reserved.
                     if (this.questions.shareWork.value === true) {
-                        this.questions.attribution.show = true
+                        this.currentStep = step + 1
                     } else if (this.questions.shareWork.value === false)  {
+                        this.currentStep = step
                         this.selectedLicense = "All Rights Reserved"
                         showSelect = true
                     }
@@ -175,28 +223,31 @@ export default {
                 case 4: 
                     // Attribution
                     if (this.questions.attribution.value === true) {
-                        this.questions.commercialUse.show = true
+                        this.currentStep = step + 1
                     } else if (this.questions.attribution.value === false)  {
+                        this.currentStep = step
                         this.selectedLicense = "CC0 1.0"
                         showSelect = true
                     }
                     break;
                 case 5:
                     //Is Commercial use allowed?
-                    this.questions.modificationAllowed.show = true
+                    this.currentStep = step + 1
                     showSelect = false
                     break;
                 case 6:
                     // Is modifiction allowed?
                     if (this.questions.modificationAllowed.value === true) {
-                        this.questions.identicalTerms.show = true
+                        this.currentStep = step + 1
                     }
                     else if (this.questions.modificationAllowed.value === false)  {
                         if (this.questions.commercialUse.value === true) {
+                            this.currentStep = step
                             this.selectedLicense = "CC BY-ND"
                             showSelect = true
                         } else if (this.questions.commercialUse.value === false)  {
                             this.selectedLicense = "CC BY-NC-ND"
+                            this.currentStep = step
                             showSelect = true
                         }
                     }
@@ -229,22 +280,28 @@ export default {
             this.showSelect = showSelect    
         },
 
-        hideSteps(step) {
-            //Hide any questions past the current question
-            for (const question in this.questions) {
-                if (this.questions[question].step > step) {
-                    Vue.set(this.questions[question], 'show', false)
-                    Vue.set(this.questions[question], 'value', null)
-                }
+        getAnswerText(question) {
+            let answer
+            if (question.value === true) {
+                answer = 'Yes'
             }
+            if (question.value === false) {
+                answer = 'No'
+            }
+            return answer
         }
     }
 
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #form-license{
     width: 100%;
 }
+
+.tab-subtext {
+    font-size: 10px;
+}
+
 </style>

@@ -35,6 +35,7 @@ export default {
   ** Nuxt.js dev-modules
   */
     buildModules: [
+        '@nuxtjs/style-resources'
     ],
     /*
   ** Nuxt.js modules
@@ -42,7 +43,20 @@ export default {
     modules: [
     // Doc: https://bootstrap-vue.js.org
         'bootstrap-vue/nuxt',
+        
     ],
+
+    bootstrapVue: {
+        icons: true // Install the IconsPlugin (in addition to BootStrapVue plugin
+    },
+
+    styleResources: {
+        scss: [
+          './assets/scss/vars/*.scss',
+          './assets/scss/main.scss'
+          //'./assets/abstracts/_mixins.scss' // use underscore "_" & also file extension ".scss"
+          ]
+    },
 
     /*
   ** Build configuration
