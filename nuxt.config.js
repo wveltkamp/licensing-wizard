@@ -30,6 +30,7 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
     plugins: [
+        { src: "~/plugins/vuelidate" }
     ],
     /*
   ** Nuxt.js dev-modules

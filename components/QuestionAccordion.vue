@@ -34,7 +34,7 @@
                 </b-form-group>
             </b-card-body>
         </b-collapse>
-        
+
     </b-card>
 </template>
 
@@ -60,12 +60,6 @@ export default {
             type: String,
             default: null
         }
-    },
-
-    data() {
-        return {
-            visible: false
-        };
     },
 
     methods: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="m-2">
+    <div class="license-container m-2">
         <b-row>
             <b-col>
                 <span class="m-2">License selector</span> 
@@ -39,7 +39,7 @@
                     <span v-if="questions.knowLicense.value">Please select your license</span>
                     <span v-if="questions.knowLicense.value === false">Based on your selection, we suggest:</span>
                     <b-form-select
-                        v-model="selectedLicense"
+                        v-model="licenseInput"
                         :options="licenseOptions"
                         size="sm"
                     />
@@ -47,9 +47,9 @@
             </b-col>
             <b-col cols="12" >
                 <b-card >
-                    <span>{{wurOnly.question}}</span>
+                    <span>Is sharing WUR-only?</span>
                     <b-form-checkbox 
-                        v-model="wurOnly.value"
+                        v-model="wurOnlyInput"
                         id="checkbox-wur-only"
                     >
                         Sharing should be wur-only
@@ -70,9 +70,22 @@ import InfoButton from "./InfoButton";
 
 export default {
     name: "LicensingWizard",
+
+    props: {
+        license: {
+            type: String,
+            required: true
+        },
+        wurOnly: {
+            type: Boolean,
+            required: true
+        }
+    },
+
     components: { QuestionCard, QuestionAccordion, InfoButton },
     data() {
         return {
+            showSelect: false,
             currentStep: 1,
             questions: {
                 canLicense: {
@@ -111,14 +124,7 @@ export default {
                     step: 7,
                     show: false}
             },
-            wurOnly: {
-                value : null, 
-                question: "Is sharing WUR-only?"},
-            optionsBool: [
-                {value: true, name: "Yes"},
-                {value: false, name: "No"},
-            ],
-            showSelect: false,
+
             licenseOptions: [
                 "All Rights Reserved", 
                 "CC BY",
@@ -129,15 +135,40 @@ export default {
                 "CC BY-NC-ND",
                 "CC0 1.0", 
                 "wur-c", 
-                {text: "CC-SA", value :"CC-SA", disabled: true}],
-            selectedLicense: "",
+                {text: "CC-SA", value :"CC-SA", disabled: true}
+            ],
+
+            optionsBool: [
+                {value: true, name: "Yes"},
+                {value: false, name: "No"},
+            ],
+
+   
+            
         };
     },
 
     computed: {
         orderedQuestions() { return _.orderBy(this.questions, 'step'); },
         currentQuestion() { return this.orderedQuestions.filter(q => q.step === this.currentStep); },
-        showQuestions() { return this.orderedQuestions.filter(q => q.step <= this.currentStep); }
+        showQuestions() { return this.orderedQuestions.filter(q => q.step <= this.currentStep); },
+
+        licenseInput: {
+            get() {
+                return this.license
+            },
+            set(newValue) {
+                this.$emit('update:license', newValue)
+            }
+        },
+        wurOnlyInput: {
+            get() {
+                return this.wurOnly
+            },
+            set(newValue) {
+                this.$emit('update:wurOnly', newValue)
+            }
+        }
     },
 
     methods: {
@@ -259,6 +290,10 @@ export default {
             }
             return answer;
         },
+
+        handleWurOnlyInput(value) {
+            console.log(value)
+        }
     }
 
 };
