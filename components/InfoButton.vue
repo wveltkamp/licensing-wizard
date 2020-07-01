@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import { BootstrapVueIcons } from 'bootstrap-vue'
+import { BootstrapVueIcons } from 'bootstrap-vue';
 export default {
     name: "InfoButton",
 
     props: {
-                buttonText: {
+        buttonText: {
             type: String,
             required: true
         }
@@ -41,10 +41,10 @@ export default {
     data() {
         return {
             modalShow: false
-        }
+        };
         
     }
-}
+};
 </script>
 
 <style lang="scss" scoped>

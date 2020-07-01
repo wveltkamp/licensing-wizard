@@ -2,17 +2,17 @@
 
     <b-tab :active="question.step===currentStep">
         <template v-slot:title>
-            <b-button-group class="question-title" size="sm" :title="question.question">
+            <b-button-group 
+                class="question-title" 
+                size="sm" 
+                :title="question.question"
+            >
                 <b-button class="tab-step">Step {{question.step}}</b-button>
                 <b-button class="tab-question" >{{question.question}}</b-button>
-                <b-button 
-                    v-if="question.value != null" 
-                    class="tab-answer"
-                >
-                    {{answerText}}
-                </b-button>
+                <b-button v-if="answerText" class="tab-answer">{{answerText}}</b-button>
             </b-button-group>
         </template>
+        
 
         <span>{{question.question}}</span>
         
@@ -58,6 +58,7 @@ export default {
             type: String,
             default: null
         }
+        
     },
 
     data () {
@@ -65,9 +66,10 @@ export default {
            
         };
     },
+
     methods: {
         answered() {
-            this.$emit('questionAnswered', this.question.step)
+            this.$emit('questionAnswered', this.question.step);
         }
     }
 };

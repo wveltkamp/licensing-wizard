@@ -52,10 +52,10 @@ export default {
 
     styleResources: {
         scss: [
-          './assets/scss/vars/*.scss',
-          './assets/scss/main.scss'
-          //'./assets/abstracts/_mixins.scss' // use underscore "_" & also file extension ".scss"
-          ]
+            './assets/scss/vars/*.scss',
+            './assets/scss/main.scss'
+            //'./assets/abstracts/_mixins.scss' // use underscore "_" & also file extension ".scss"
+        ]
     },
 
     /*

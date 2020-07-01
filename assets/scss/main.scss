@@ -1,64 +1,67 @@
+
 /* Overrule nav-link styling */
-.nav-link, .nav-link:active {
-    border: none !important;
-    background: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.nav-item {
-    height: 40px;
-}
-
-.nav-link{
-    .question-title {
-        padding-bottom: 0.5em;
-        width: 100%;
-        max-width: 100%;
+    .nav-link, .nav-link:active {
+        border: none !important;
+        background: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
     
-
-        button {
-            color: $black;
-            background-color: $white; 
-            justify-content: left;   
-        }
+    .nav-pills {
+        width: 25em;
+    }
+    
+    .nav-item {
+        height: 40px;
+    }
+    
+    .nav-link{
+        .question-title {
+            padding-bottom: 0.5em;
+            width: 100%;
+            max-width: 100%;
         
     
-        .tab-step, .tab-answer {
-            width: 20%;
-            min-width: 20%;
-            max-width: 20%;
+            button {
+                color: $black;
+                background-color: $white; 
+                justify-content: left;   
+            }
+            
+        
+            .tab-step, .tab-answer {
+                flex: 0 0 5em;
+            }
+    
+            .tab-question {
+                flex-basis: fill;
+                text-align: left;
+    
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap
+    
+                ;
+            }
+    
+            &:hover{
+                button {
+                    color: $white;
+                    background-color: $blue;
+                }
+            }
+        
+            
         }
-
-        .tab-question {
-            width: 60%;
-            text-align: left;
-
-            display: inline-block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap
-
-            ;
-        }
-
-        &:hover{
+    
+        &.active {
             button {
                 color: $white;
                 background-color: $blue;
             }
         }
-    
-        
     }
-
-    &.active {
-        button {
-            color: $white;
-            background-color: $blue;
-        }
-    }
-}
 
 
 /* Transitions */
