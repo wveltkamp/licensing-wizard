@@ -2,7 +2,7 @@
     <client-only>
     <b-container fluid class="main">
             <b-row>
-                <b-col cols="12">
+                <b-col col xl="6">
                     <b-card
                         title="Upload your document"
                         class="m-2"
@@ -12,7 +12,7 @@
                             <b-form class="form-upload" novalidate>
 
                                 <b-form-row > <!-- creator name -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group
                                             label="Creator"
                                             label-size="sm"
@@ -31,7 +31,7 @@
                                                 <b-col>
                                                     <b-form-input
                                                         id="creator-voorvoegsel"
-                                                        placeholder="Title(s)"
+                                                        placeholder="Prefix(es) "
                                                         size="sm"
                                                     />
                                                 </b-col>
@@ -48,7 +48,7 @@
                                 </b-form-row> <!-- end creator name -->
 
                                 <b-form-row> <!-- contact information -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group 
                                             label="Contact Information"
                                             label-size="sm"
@@ -70,31 +70,68 @@
                                 </b-form-row> <!-- end contact information -->
 
                                 <b-row> <!-- Spacer with hr -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <hr>
                                     </b-col>
                                 </b-row>
                                 
-
-                                <b-form-row> <!-- file select -->
-                                    <b-col col xl="6">
+                                <b-form-row>
+                                    <b-col>
                                         <b-form-group
-                                            label="Select a file"
+                                            label="Upload file or submit Url?"
                                             label-size="sm"
                                             label-cols-sm="3"
-                                            label-for="file-upload"
+                                            label-for="add-file"
                                             class="m-2"
                                         >
-                                            <b-form-file 
-                                                id="file-upload"
-                                                size="sm"
+                                            <b-form-radio-group
+                                                id="wur-only"
+                                                v-model="addFile"
+                                                :options="addFileOptions"
+                                                name="add-file-radio"
                                             />
                                         </b-form-group>
                                     </b-col>
+                                </b-form-row>
+
+                                <b-form-row> <!-- file select -->                                
+
+                                    <b-col >
+                                        <transition name="slide-right" mode="out-in">
+                                            <b-form-group 
+                                                v-if="addFile" key="file"
+                                                label="Select a file"
+                                                label-size="sm"
+                                                label-cols-sm="3"
+                                                label-for="file-upload"
+                                                class="m-2"
+                                            >
+                                                <b-form-file 
+                                                    id="file-upload"
+                                                    size="sm"
+                                                />
+                                            </b-form-group>
+
+                                            <b-form-group 
+                                                v-if="!addFile" key="url"
+                                                label="Material Url"
+                                                label-size="sm"
+                                                label-cols-sm="3"
+                                                label-for="file-url"
+                                                class="m-2"
+                                            >
+                                                <b-form-input 
+                                                    id="file-url"
+                                                    size="sm"
+                                                />
+                                            </b-form-group>
+                                        </transition>
+                                    </b-col>
+                                    
                                 </b-form-row> <!-- end file select -->
 
                                 <b-form-row> <!-- cover-image select -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group
                                             label="Select a cover image"
                                             label-size="sm"
@@ -110,10 +147,10 @@
                                     </b-col>
                                 </b-form-row> <!-- end cover-image select -->
 
-                                <b-form-row> <!-- record name -->
-                                    <b-col col xl="6">
+                                <b-form-row> <!-- material name -->
+                                    <b-col>
                                         <b-form-group
-                                            label="Record name"
+                                            label="Material name"
                                             label-size="sm"
                                             label-cols-sm="3"
                                             label-for="file-name"
@@ -125,12 +162,12 @@
                                             />
                                         </b-form-group>
                                     </b-col>
-                                </b-form-row> <!-- end record name -->
+                                </b-form-row> <!-- end material name -->
 
-                                <b-form-row> <!-- record description -->
-                                    <b-col col xl="6">
+                                <b-form-row> <!-- material description -->
+                                    <b-col>
                                         <b-form-group
-                                            label="Record description"
+                                            label="Material description"
                                             label-size="sm"
                                             label-cols-sm="3"
                                             label-for="file-description"
@@ -142,10 +179,10 @@
                                             />
                                         </b-form-group>
                                     </b-col>
-                                </b-form-row> <!-- end record description -->
+                                </b-form-row> <!-- end material description -->
 
                                 <b-form-row> <!-- course code -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group
                                             label="Course code(s)"
                                             label-size="sm"
@@ -162,7 +199,7 @@
                                 </b-form-row> <!-- end course code -->
 
                                 <b-form-row> <!-- copyright owner -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group
                                             label="Course level"
                                             label-size="sm"
@@ -182,13 +219,13 @@
                                 </b-form-row> <!-- end copyright owner -->
 
                                 <b-row> <!-- Spacer with hr -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <hr>
                                     </b-col>
                                 </b-row>
 
                                 <b-form-row> <!-- copyright owner -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group
                                             label="Copyright owner"
                                             label-size="sm"
@@ -208,7 +245,7 @@
                                 </b-form-row> <!-- end copyright owner -->
 
                                 <b-form-row> <!-- license selector -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group
                                             label="Select a license"
                                             label-size="sm"
@@ -226,7 +263,7 @@
                                                 
                                                 />
                                             </b-col>
-                                            <b-col cols="auto">
+                                            <b-col>
                                                 <b-button 
                                                     v-b-modal.license-selector
                                                     variant="outline-primary"
@@ -249,7 +286,7 @@
                                 </b-form-row> <!-- end license selector -->
 
                                 <b-form-row> <!-- copyright owner -->
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <b-form-group
                                             label="Is sharing WUR only?"
                                             label-size="sm"
@@ -269,14 +306,14 @@
                                 </b-form-row> <!-- end copyright owner -->
                                 
                                 <b-form-row>
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <div class="m-2">
-                                            <b-button @click.prevent="submitForm" class="submit">Submit</b-button>
+                                            <b-button @click.prevent="submitForm" class="submit" variant="primary">Submit</b-button>
                                         </div>
                                     </b-col>
                                 </b-form-row>
                                 <b-row>
-                                    <b-col col xl="6">
+                                    <b-col>
                                         <div class="m-2">
                                             <p v-if="errors" class="error">The form above has errors</p>
                                             <p v-else-if="empty && uiState === 'submit clicked'" class="error">
@@ -306,6 +343,11 @@ export default {
     components: { LicensingWizard },
     data() {
         return {
+            addFileOptions: [
+               { text: 'Add a file', value: true }, 
+               { text: 'Submit a Url', value: false },
+            ],
+
             copyrightOwnerOptions: [
                 { value: null, text: 'Please select the copyright owner' },
                 { value: 'author', text: 'Author' },
@@ -340,6 +382,11 @@ export default {
                 copyrightOwner: null,
                 license: ''
             },
+
+            /* Add file or url?*/ 
+            addFile: true,
+
+            /* Validation variables*/ 
             uiState: "submit not clicked",
             errors: false,
             empty: true,

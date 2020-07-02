@@ -64,7 +64,7 @@ export default {
     props: {
         license: {
             type: String,
-            required: true
+            default: ''
         },
 
     },
@@ -193,7 +193,7 @@ export default {
                     this.currentStep = step + 1;
                 } else if (this.questions.shareWork.value === false) {
                     this.currentStep = step;
-                    this.selectedLicense = "All Rights Reserved";
+                    this.licenseInput = "All Rights Reserved";
                     showSelect = true;
                 }
                 break;
@@ -203,7 +203,7 @@ export default {
                     this.currentStep = step + 1;
                 } else if (this.questions.attribution.value === false) {
                     this.currentStep = step;
-                    this.selectedLicense = "CC0 1.0";
+                    this.licenseInput = "CC0 1.0";
                     showSelect = true;
                 }
                 break;
@@ -220,10 +220,10 @@ export default {
                 else if (this.questions.modificationAllowed.value === false) {
                     if (this.questions.commercialUse.value === true) {
                         this.currentStep = step;
-                        this.selectedLicense = "CC BY-ND";
+                        this.licenseInput = "CC BY-ND";
                         showSelect = true;
                     } else if (this.questions.commercialUse.value === false) {
-                        this.selectedLicense = "CC BY-NC-ND";
+                        this.licenseInput = "CC BY-NC-ND";
                         this.currentStep = step;
                         showSelect = true;
                     }
@@ -233,18 +233,18 @@ export default {
                 //Use identical terms?
                 if (this.questions.commercialUse.value === true) {
                     if (this.questions.identicalTerms.value === true ) {
-                        this.selectedLicense = "CC BY-SA";
+                        this.licenseInput = "CC BY-SA";
                         showSelect = true;
                     } else if (this.questions.identicalTerms.value === false) {
-                        this.selectedLicense = "CC BY";
+                        this.licenseInput = "CC BY";
                         showSelect = true;
                     }
                 } else if (this.questions.commercialUse.value === false) {
                     if (this.questions.identicalTerms.value === true ) {
-                        this.selectedLicense = "CC BY-NC-SA";
+                        this.licenseInput = "CC BY-NC-SA";
                         showSelect = true;
                     } else if (this.questions.identicalTerms.value === false ) {
-                        this.selectedLicense = "CC BY-NC";
+                        this.licenseInput = "CC BY-NC";
                         showSelect = true;
                     }
                 }

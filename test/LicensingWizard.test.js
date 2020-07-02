@@ -178,24 +178,5 @@ describe("index", () => {
         expect(wrapper.vm.selectedLicense).toBe("CC BY-NC-SA"); 
     });
 
-    it("selects Wur only", async () => {
-        wrapper.find('#question-1').find('input[value="true"]').setChecked(true);
-        await Vue.nextTick();
-        wrapper.find('#question-2').find('input[value="false"]').setChecked(true);
-        await Vue.nextTick();
-        wrapper.find('#question-3').find('input[value="true"]').setChecked(true);
-        await Vue.nextTick();
-        wrapper.find('#question-4').find('input[value="true"]').setChecked(true);
-        await Vue.nextTick();
-        wrapper.find('#question-5').find('input[value="false"]').setChecked(true);
-        await Vue.nextTick();
-        wrapper.find('#question-6').find('input[value="true"]').setChecked(true);
-        await Vue.nextTick();
-        wrapper.find('#question-7').find('input[value="true"]').setChecked(true);
-        await Vue.nextTick();
-        wrapper.find('#checkbox-wur-only').find('input').setChecked(true);
-        await Vue.nextTick();
-        expect(wrapper.vm.wurOnly.value).toBe(true); 
-    });
       
 });
