@@ -62,7 +62,8 @@
                                                 placeholder="e-mail address"
                                                 size="sm"
                                                 v-model.trim.lazy="$v.form.contactInformation.$model"
-                                                :state="validateState('contactInformation')"
+                                                
+                                                debounce="500"
                                             />
                                         </b-form-group>
                                     </b-col>
@@ -160,22 +161,31 @@
                                     </b-col>
                                 </b-form-row> <!-- end course code -->
 
+                                <b-form-row> <!-- copyright owner -->
+                                    <b-col col xl="6">
+                                        <b-form-group
+                                            label="Course level"
+                                            label-size="sm"
+                                            label-cols-sm="3"
+                                            label-for="course-level"
+                                            class="m-2"
+                                        >
+                                            <b-form-select 
+                                                id="course-level" 
+                                                :options="courseLevelOptions"
+                                                size="sm"
+                                                v-model="$v.form.courseLevel.$model"
+                                                
+                                            />
+                                        </b-form-group>
+                                    </b-col>
+                                </b-form-row> <!-- end copyright owner -->
+
                                 <b-row> <!-- Spacer with hr -->
                                     <b-col col xl="6">
                                         <hr>
                                     </b-col>
                                 </b-row>
-
-                                <b-form-row> <!-- license selector -->
-                                    <b-col col xl="6">
-                                        <licensing-wizard 
-                                            :license="form.license"
-                                            :wur-only="form.wurOnly"
-                                            @update:license="form.license=$event"
-                                            @update:wurOnly="form.wurOnly=$event"
-                                        />
-                                    </b-col>
-                                </b-form-row> <!-- end license selector -->
 
                                 <b-form-row> <!-- copyright owner -->
                                     <b-col col xl="6">
@@ -190,13 +200,75 @@
                                                 id="copyright-owner" 
                                                 :options="copyrightOwnerOptions"
                                                 size="sm"
+                                                v-model="$v.form.copyrightOwner.$model"
+                                                
                                             />
                                         </b-form-group>
                                     </b-col>
                                 </b-form-row> <!-- end copyright owner -->
+
+                                <b-form-row> <!-- license selector -->
+                                    <b-col col xl="6">
+                                        <b-form-group
+                                            label="Select a license"
+                                            label-size="sm"
+                                            label-cols-sm="3"
+                                            label-for="license"
+                                            class="m-2"
+                                        >
+                                        <b-row>
+                                            <b-col cols="9">
+                                                <b-form-select 
+                                                id="license" 
+                                                :options="licenseOptions"
+                                                size="sm"
+                                                v-model="$v.form.license.$model"
+                                                
+                                                />
+                                            </b-col>
+                                            <b-col>
+                                                <b-button 
+                                                    v-b-modal.license-selector
+                                                    variant="outline-primary"
+                                                    size="sm"
+                                                >
+                                                    Help me Choose
+                                                </b-button>
+                                            </b-col>
+                                            </b-row>
+                                        </b-form-group>
+
+                                        <b-modal id="license-selector" title="BootstrapVue">
+                                            <licensing-wizard 
+                                            :license="form.license"
+                                            :wur-only="form.wurOnly"
+                                            @update:license="updateLicense($event)"
+                                            @update:wurOnly="updateWurOnly($event)"
+                                        />
+                                        </b-modal>
+                            
+                                    </b-col>
+                                </b-form-row> <!-- end license selector -->
+
+                                
                                 <b-form-row>
-                                    <b-button @click.prevent="submitForm" class="submit">Submit</b-button>
+                                    <b-col col xl="6">
+                                        <div class="m-2">
+                                            <b-button @click.prevent="submitForm" class="submit">Submit</b-button>
+                                        </div>
+                                    </b-col>
                                 </b-form-row>
+                                <b-row>
+                                    <b-col col xl="6">
+                                        <div class="m-2">
+                                            <p v-if="errors" class="error">The form above has errors</p>
+                                            <p v-else-if="empty && uiState === 'submit clicked'" class="error">
+                                                The form above is empty, please fill in required fields
+                                            </p>
+                                            <p v-else-if="uiState === 'form submitted'" class="success">Form submitted</p>
+                                        </div>
+                                    </b-col>
+                                </b-row>
                             </b-form>
 
                         </b-card-text>
@@ -208,6 +280,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { required, email } from 'vuelidate/lib/validators';
 import LicensingWizard from '../components/LicensingWizard';
 
@@ -217,12 +290,31 @@ export default {
     data() {
         return {
             copyrightOwnerOptions: [
+                { value: null, text: 'Please select the copyright owner' },
                 { value: 'author', text: 'Author' },
                 { value: 'publisher', text: 'Publisher' },
             ],
+            courseLevelOptions: [
+                { value: null, text: 'Please select the course level' },
+                { value: 'WO', text: 'WO' },
+                { value: 'HBO', text: 'HBO' },
+            ],
+            licenseOptions: [
+                "All Rights Reserved", 
+                "CC BY",
+                "CC BY-SA",
+                "CC BY-NC",
+                "CC BY-ND",
+                "CC BY-NC-SA",
+                "CC BY-NC-ND",
+                "CC0 1.0", 
+                "wur-c", 
+                {text: "CC-SA", value :"CC-SA", disabled: true}
+            ],
 
             form: {
-                contactInformation: null,   
+                contactInformation: null, 
+                courseLevel: null,  
                 wurOnly: false,
                 copyrightOwner: null,
                 license: ''
@@ -245,6 +337,9 @@ export default {
             
             copyrightOwner: {
                 required
+            },
+            courseLevel: {
+                required
             }
         }
 
@@ -253,7 +348,7 @@ export default {
     methods: {
         validateState(name) {
             const { $dirty, $error } = this.$v.form[name];
-            return $dirty ? !$error : null;
+            return $dirty || this.uiState === "submit clicked" ? !$error : null;
         },
 
         submitForm() {
@@ -264,6 +359,14 @@ export default {
                 //this is where you send the responses
                 this.uiState = "form submitted";
             }
+        },
+
+        updateLicense(input) {
+            Vue.set(this.form, "license", input)
+        },
+
+        updateWurOnly(input) {
+            Vue.set(this.form, "wurOnly", input)
         }
     }
 
