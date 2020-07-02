@@ -217,7 +217,7 @@
                                             class="m-2"
                                         >
                                         <b-row>
-                                            <b-col cols="9">
+                                            <b-col cols="8">
                                                 <b-form-select 
                                                 id="license" 
                                                 :options="licenseOptions"
@@ -226,7 +226,7 @@
                                                 
                                                 />
                                             </b-col>
-                                            <b-col>
+                                            <b-col cols="auto">
                                                 <b-button 
                                                     v-b-modal.license-selector
                                                     variant="outline-primary"
@@ -238,18 +238,35 @@
                                             </b-row>
                                         </b-form-group>
 
-                                        <b-modal id="license-selector" title="BootstrapVue">
+                                        <b-modal id="license-selector" title="License Selector" size="xl">
                                             <licensing-wizard 
                                             :license="form.license"
-                                            :wur-only="form.wurOnly"
                                             @update:license="updateLicense($event)"
-                                            @update:wurOnly="updateWurOnly($event)"
                                         />
                                         </b-modal>
                             
                                     </b-col>
                                 </b-form-row> <!-- end license selector -->
 
+                                <b-form-row> <!-- copyright owner -->
+                                    <b-col col xl="6">
+                                        <b-form-group
+                                            label="Is sharing WUR only?"
+                                            label-size="sm"
+                                            label-cols-sm="3"
+                                            label-for="wur-only"
+                                            class="m-2"
+                                        >
+                                            <b-form-radio-group
+                                                id="wur-only"
+                                                v-model="form.wurOnly"
+                                                :options="wurOnlyOptions"
+                                                name="wur-only-radio"
+                                            />
+
+                                        </b-form-group>
+                                    </b-col>
+                                </b-form-row> <!-- end copyright owner -->
                                 
                                 <b-form-row>
                                     <b-col col xl="6">
@@ -311,11 +328,15 @@ export default {
                 "wur-c", 
                 {text: "CC-SA", value :"CC-SA", disabled: true}
             ],
+            wurOnlyOptions: [
+               { text: 'Yes', value: true }, 
+               { text: 'No', value: false },
+            ],
 
             form: {
                 contactInformation: null, 
                 courseLevel: null,  
-                wurOnly: false,
+                wurOnly: null,
                 copyrightOwner: null,
                 license: ''
             },

@@ -45,17 +45,7 @@
                     />
                 </b-card>
             </b-col>
-            <b-col cols="12" >
-                <b-card >
-                    <span>Is sharing WUR-only?</span>
-                    <b-form-checkbox 
-                        v-model="wurOnlyInput"
-                        id="checkbox-wur-only"
-                    >
-                        Sharing should be wur-only
-                    </b-form-checkbox>
-                </b-card>
-            </b-col>
+            
         </b-row>
     </div>
 </template>
@@ -76,10 +66,7 @@ export default {
             type: String,
             required: true
         },
-        wurOnly: {
-            type: Boolean,
-            required: true
-        }
+
     },
 
     components: { QuestionCard, QuestionAccordion, InfoButton },
@@ -133,9 +120,6 @@ export default {
                 "CC BY-ND",
                 "CC BY-NC-SA",
                 "CC BY-NC-ND",
-                "CC0 1.0", 
-                "wur-c", 
-                {text: "CC-SA", value :"CC-SA", disabled: true}
             ],
 
             optionsBool: [
@@ -161,14 +145,7 @@ export default {
                 this.$emit('update:license', newValue)
             }
         },
-        wurOnlyInput: {
-            get() {
-                return this.wurOnly
-            },
-            set(newValue) {
-                this.$emit('update:wurOnly', newValue)
-            }
-        }
+
     },
 
     methods: {
@@ -291,9 +268,6 @@ export default {
             return answer;
         },
 
-        handleWurOnlyInput(value) {
-            console.log(value)
-        }
     }
 
 };
