@@ -36,6 +36,29 @@ describe("index", () => {
 
     });
 
+    it("clears all questions on erstart", async () => { 
+        wrapper.find('#question-1').find('input[value="true"]').setChecked(true);
+        await Vue.nextTick();
+        wrapper.find('#question-2').find('input[value="false"]').setChecked(true);
+        await Vue.nextTick();
+        wrapper.find('#question-3').find('input[value="true"]').setChecked(true);
+        await Vue.nextTick();
+        wrapper.find('#question-4').find('input[value="true"]').setChecked(true);
+        await Vue.nextTick();
+        wrapper.find('#question-5').find('input[value="true"]').setChecked(true);
+        await Vue.nextTick();
+        wrapper.find('#question-6').find('input[value="true"]').setChecked(true);
+        await Vue.nextTick();
+        wrapper.find('#question-7').find('input[value="false"]').setChecked(true);
+        await Vue.nextTick();
+        wrapper.find('#reset-questions').trigger('click');
+        await Vue.nextTick();
+        for (var question in questions) {
+            expect(questions[question].value).toBe(null);
+        }
+
+    });
+
     it("shows step 2 if step 1 is marked true, then hide if value is changed", async () => {
         
         wrapper.find('#question-1').find('input[value="true"]').setChecked(true);
@@ -54,7 +77,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-3').find('input[value="false"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("All Rights Reserved");
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["All Rights Reserved"]);
     });
 
     it("selects CC0", async () => {
@@ -66,7 +89,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-4').find('input[value="false"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("CC0 1.0");            
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC0 1.0"]);        
     });
 
     it("selects CC BY-ND", async () => {
@@ -82,7 +105,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-6').find('input[value="false"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("CC BY-ND");         
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC BY-ND"]);   
     });
 
     it("selects CC BY", async () => {
@@ -100,7 +123,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-7').find('input[value="false"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("CC BY");       
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC BY"]);  
  
     });
 
@@ -119,7 +142,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-7').find('input[value="true"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("CC BY-SA"); 
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC BY-SA"]);
     });
 
     it("selects CC BY-NC-ND", async () => {
@@ -135,7 +158,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-6').find('input[value="false"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("CC BY-NC-ND");       
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC BY-NC-ND"]);   
                           
         
     });
@@ -157,7 +180,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-7').find('input[value="false"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("CC BY-NC"); 
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC BY-NC"]); 
     });
 
     it("selects CC BY-NC-SA", async () => {
@@ -175,7 +198,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-7').find('input[value="true"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.vm.selectedLicense).toBe("CC BY-NC-SA"); 
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC BY-NC-SA"]);
     });
 
       

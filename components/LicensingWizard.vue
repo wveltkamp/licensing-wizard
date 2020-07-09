@@ -3,7 +3,15 @@
         <b-row>
             <b-col>
                 <span class="m-2">License selector</span> 
-                <b-button class="m-2" size="sm" variant="outline-primary" @click="resetForm">Restart Wizard</b-button>
+                <b-button 
+                    id="reset-questions"
+                    class="m-2" 
+                    size="sm" 
+                    variant="outline-primary" 
+                    @click="resetForm"
+                >
+                    Restart Wizard
+                </b-button>
             </b-col>
         </b-row>
 
@@ -151,14 +159,13 @@ export default {
     methods: {
         resetForm() {
             this.currentStep = 1;
-            this.hideSteps(this.currentStep);
+            this.hideSteps(0) //Reset all questions, including question 1
         },
 
         hideSteps(step) {
             //Hide any questions past the current question
             for (const question in this.questions) {
                 if (this.questions[question].step > step) {
-                    Vue.set(this.questions[question], 'show', false);
                     Vue.set(this.questions[question], 'value', null);
                 }
             }
