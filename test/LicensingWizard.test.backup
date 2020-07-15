@@ -4,7 +4,6 @@ import BootstrapVue from "bootstrap-vue";
 
 import LicensingWizard from "../components/LicensingWizard";
 
-
 let wrapper;
 let questions;
 
@@ -36,7 +35,7 @@ describe("index", () => {
 
     });
 
-    it("clears all questions on erstart", async () => { 
+    it("clears all questions on restart", async () => { 
         wrapper.find('#question-1').find('input[value="true"]').setChecked(true);
         await Vue.nextTick();
         wrapper.find('#question-2').find('input[value="false"]').setChecked(true);
@@ -89,7 +88,7 @@ describe("index", () => {
         await Vue.nextTick();
         wrapper.find('#question-4').find('input[value="false"]').setChecked(true);
         await Vue.nextTick();
-        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC0 1.0"]);        
+        expect(wrapper.emitted()['update:license'][0]).toEqual(["CC0"]);        
     });
 
     it("selects CC BY-ND", async () => {

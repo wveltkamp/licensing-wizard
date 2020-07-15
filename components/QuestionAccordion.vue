@@ -4,13 +4,14 @@
         <b-card-header 
             header-tag="header" 
             role="tab" 
-            class="question-header px-2 py-1 d-flex" 
+            class="header px-2 py-1 d-flex" 
             v-b-toggle="'accordion-' + question.step"
+            :title="this.question.question"
         >
-            <span>
+            <span class="header-question">
                 {{'Step ' + this.question.step + ': ' + this.question.question}}
             </span>
-            <span class="ml-auto" v-if="answerText">
+            <span class="header-answer" v-if="answerText">
                 You chose: {{answerText}}
             </span>
         </b-card-header>
@@ -26,7 +27,7 @@
                 <b-form-group :id="'question-'+question.step">
                     <b-form-radio-group 
                         v-model="question.value" 
-                        :options="options" 
+                        :options="question.options" 
                         value-field="value" 
                         text-field="name" 
                         @input="answered()" 
@@ -51,11 +52,6 @@ export default {
             type: Number,
             required: true
         },
-        options: {
-            type: Array,
-            required: true
-
-        },
         answerText: {
             type: String,
             default: null
@@ -71,7 +67,20 @@ export default {
 </script>
 
 <style lang="scss">
-.question-header {
+.header {
     cursor: pointer;
+    
+    .header-question {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+    }
+
+    .header-answer {
+        flex-grow: 1;
+        white-space: nowrap;
+    }
 }
+
 </style>

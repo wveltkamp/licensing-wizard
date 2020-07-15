@@ -21,8 +21,7 @@
                     <question-accordion
                         v-for="question in showQuestions" 
                         :key="'accordion-'+question.step"
-                        :question="question" 
-                        :options="optionsBool"
+                        :question="question"
                         :current-step="currentStep"
                         :answer-text="getAnswerText(question)"
                         @questionAnswered="handleQuestionAnswered"
@@ -61,9 +60,9 @@
 <script>
 import Vue from "vue";
 import _ from 'lodash';
-import QuestionCard from "./QuestionCard";
 import QuestionAccordion from "./QuestionAccordion";
 import InfoButton from "./InfoButton";
+import config from "../assets/data/config";
 
 
 export default {
@@ -77,73 +76,20 @@ export default {
 
     },
 
-    components: { QuestionCard, QuestionAccordion, InfoButton },
+    components: { QuestionAccordion, InfoButton },
     data() {
         return {
             showSelect: false,
             currentStep: 1,
-            questions: {
-                canLicense: {
-                    value : null, 
-                    question: "Can you license the work?", 
-                    step: 1,
-                    show: true},
-                knowLicense: {
-                    value : null, 
-                    question: "Do you know which license you need?", 
-                    step: 2,
-                    show: false},
-                shareWork: {
-                    value : null, 
-                    question: "Can others share the work?", 
-                    step: 3,
-                    show: false},
-                attribution: {
-                    value : null, 
-                    question: "Do you want attribution?", 
-                    step: 4,
-                    show: false},
-                commercialUse: {
-                    value : null, 
-                    question: "Is commercial use allowed?", 
-                    step: 5,
-                    show: false},
-                modificationAllowed: {
-                    value : null, 
-                    question: "Is modification allowed?", 
-                    step: 6,
-                    show: false},
-                identicalTerms: {
-                    value : null, 
-                    question: "Use identical terms?", 
-                    step: 7,
-                    show: false}
-            },
-
-            licenseOptions: [
-                "All Rights Reserved", 
-                "CC BY",
-                "CC BY-SA",
-                "CC BY-NC",
-                "CC BY-ND",
-                "CC BY-NC-SA",
-                "CC BY-NC-ND",
-            ],
-
-            optionsBool: [
-                {value: true, name: "Yes"},
-                {value: false, name: "No"},
-            ],
-
-   
-            
+            questions: config.questions,
+         
         };
     },
 
     computed: {
-        orderedQuestions() { return _.orderBy(this.questions, 'step'); },
-        currentQuestion() { return this.orderedQuestions.filter(q => q.step === this.currentStep); },
-        showQuestions() { return this.orderedQuestions.filter(q => q.step <= this.currentStep); },
+        orderedQuestions()  { return _.orderBy(this.questions, 'step'); },
+        currentQuestion()   { return this.orderedQuestions.filter(q => q.step === this.currentStep); },
+        showQuestions()     { return this.orderedQuestions.filter(q => q.step <= this.currentStep); },
 
         licenseInput: {
             get() {
@@ -210,7 +156,7 @@ export default {
                     this.currentStep = step + 1;
                 } else if (this.questions.attribution.value === false) {
                     this.currentStep = step;
-                    this.licenseInput = "CC0 1.0";
+                    this.licenseInput = "CC0";
                     showSelect = true;
                 }
                 break;

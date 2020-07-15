@@ -1,9 +1,9 @@
 import Vue from "vue";
 import { mount, createLocalVue } from "@vue/test-utils";
-import BootstrapVue from "bootstrap-vue";
+import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 import Vuelidate from 'vuelidate';
 
-import uploadForm from "../pages/index";
+import UploadForm from "../components/UploadForm";
 
 
 
@@ -14,8 +14,9 @@ let questions;
 beforeEach(() => {
     const localVue = createLocalVue();
     localVue.use(BootstrapVue);
+    localVue.use(BootstrapVueIcons);
     localVue.use(Vuelidate);
-    wrapper = mount(uploadForm, {
+    wrapper = mount(UploadForm, {
         localVue
     });
 
@@ -27,8 +28,8 @@ afterEach(() => {
 
 describe("index", () => {
 
-    it("mounts index page", () => {
-        expect(wrapper.find(".main").vm).toBeTruthy();
+    it("exists", () => {
+        expect(wrapper.find(".form-upload").vm).toBeTruthy();
     });
 
     it("renders license selector", () => {
