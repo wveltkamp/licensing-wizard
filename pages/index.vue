@@ -1,9 +1,8 @@
 <template>
     <b-container fluid class="main">
             <b-row>
-                <b-col col xl="6">
+                <b-col>
                     <b-card
-                        title="Upload your document"
                         class="m-2"
                     >
                         <b-card-text>
